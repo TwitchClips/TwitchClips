@@ -5,7 +5,7 @@ const app = Vue.createApp({
             apiUrl:"",
             urls:[],
             clips:[],
-            isDarkTheme: "dark-theme",
+            isDarkTheme: true,
             showPlayer: false,
             currentEmbedUrl: '',
             showHelp: false,
@@ -17,8 +17,11 @@ const app = Vue.createApp({
     },
     created() {
         const storedTheme = localStorage.getItem("theme");
-        this.isDarkTheme = storedTheme === "dark-theme";
+        if(storedTheme != null){
+            this.isDarkTheme = storedTheme === "dark-theme";
+        }
         this.applyTheme();
+        console.log(this.isDarkTheme);
     },
     mounted(){
         this.getSheetId();
@@ -39,6 +42,7 @@ const app = Vue.createApp({
             const theme = this.isDarkTheme ? "dark-theme" : "light-theme";
             localStorage.setItem("theme", theme);
             this.applyTheme();
+            console.log(this.isDarkTheme);
         },
         // 切換主題
         applyTheme() {
