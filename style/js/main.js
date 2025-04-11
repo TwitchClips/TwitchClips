@@ -5,7 +5,7 @@ const app = Vue.createApp({
             apiUrl:"",
             urls:[],
             clips:[],
-            isDarkTheme: true,
+            isDarkTheme: "dark-theme",
             showPlayer: false,
             currentEmbedUrl: '',
             showHelp: false,
