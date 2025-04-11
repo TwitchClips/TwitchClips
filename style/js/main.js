@@ -26,7 +26,13 @@ const app = Vue.createApp({
     mounted(){
         this.getSheetId();
         this.getTitleName();
-        this.getClips();
+        if(this.sheetId !=null){
+            this.getClips();
+        }
+        else{
+            this.showHelp= true;
+        }
+        
     },
     methods:{
         getTitleName(){
@@ -88,28 +94,27 @@ const app = Vue.createApp({
         },
         //取得剪輯
         async getClips(){
-            if(this.sheetId != null){
-                await this.getToken();
-                await this.getListFromSheet();
-                //(?:clip\/|clips\.twitch\.tv\/)  匹配 clip/ 或 clips.twitch.tv/ 抓取{id}
-                const ids = this.urls.map(item => {
-                    const url = item[0];
-                    const match = url.match(/(?:clip\/|clips\.twitch\.tv\/)([^/?]+)/);
-                    return match ? match[1] : null;
-                }).filter(id => id);
-                  
-                // 拼接 API URL
-                const twitchClipsApiUrl = `https://api.twitch.tv/helix/clips?` + ids.map(id => `id=${id}`).join('&');
-    
-                var res = await axios.get(twitchClipsApiUrl,{
-                     headers: { 
-                        'Authorization': 'Bearer '+this.token,
-                        'Client-Id': '2hcw7jubxmk94gkrzhao4wbznzobjv'
-                    }
-                });
-                console.log(res.data);
-                this.clips = res.data;
-            }
+            await this.getToken();
+            await this.getListFromSheet();
+            //(?:clip\/|clips\.twitch\.tv\/)  匹配 clip/ 或 clips.twitch.tv/ 抓取{id}
+            const ids = this.urls.map(item => {
+                const url = item[0];
+                const match = url.match(/(?:clip\/|clips\.twitch\.tv\/)([^/?]+)/);
+                return match ? match[1] : null;
+            }).filter(id => id);
+                
+            // 拼接 API URL
+            const twitchClipsApiUrl = `https://api.twitch.tv/helix/clips?` + ids.map(id => `id=${id}`).join('&');
+
+            var res = await axios.get(twitchClipsApiUrl,{
+                    headers: { 
+                    'Authorization': 'Bearer '+this.token,
+                    'Client-Id': '2hcw7jubxmk94gkrzhao4wbznzobjv'
+                }
+            });
+            console.log(res.data);
+            this.clips = res.data;
+            
         },
         //計算影片秒數
         formatDuration(seconds) { 
